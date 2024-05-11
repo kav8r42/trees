@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>trees</title>
+</head>
+<body>
+    ==============================================RECOVER THE BST======================================
+
+import java.io.*;
+import java.util.*;
+class TreeNode
+{
+    int data;
+    TreeNode right;
+    TreeNode left;
+    TreeNode(int data)
+    {
+        this.data=data;
+        this.left=null;
+        this.right=null;
+    }
+ }
+public class Main
+{
+    static TreeNode build(String st[])
+    {
+        if(st[0]=="N" || st.length==0)
+        return null;
+        TreeNode root= new TreeNode(Integer.parseInt(st[0]));
+        Queue<TreeNode> Q=new LinkedList<TreeNode>();
+        Q.add(root);
+        int i=1;
+        while(!Q.isEmpty() && i<st.length)
+        {
+            TreeNode current_element=Q.poll();
+            String current_value=st[i];
+            if(!current_value.equals("N"))
+            {
+                int element=Integer.parseInt(current_value);
+                current_element.left=new TreeNode(element);
+                Q.add(current_element.left);
+            }
+            i++;
+            if(i>=st.length)
+              break;
+              current_value=st[i];
+            if(!current_value.equals("N"))
+            {
+                int element=Integer.parseInt(current_value);
+                current_element.right=new TreeNode(element);
+                Q.add(current_element.right);
+            }
+            i++;  
+        }return root;}
+
+     static TreeNode firstNode,secondNode,prevNode;
+    public static void recoverTree(TreeNode root) {
+        if(root==null)
+            return;
+        inorderTraversal(root);
+        if(firstNode != null && secondNode != null){
+            int temp = secondNode.data;
+            secondNode.data = firstNode.data;
+            firstNode.data = temp;
+        }
+    }
+    private static void inorderTraversal(TreeNode root){
+        if(root==null)
+            return;
+         inorderTraversal(root.left);
+        if(prevNode != null && root.data < prevNode.data && firstNode == null) {
+               firstNode = prevNode;
+        }
+        if (prevNode != null && root.data < prevNode.data && firstNode != null) {
+               secondNode = root;
+        }
+        prevNode = root;
+        inorderTraversal(root.right);
+    }
+    public static void inorder(TreeNode temp)
+    {
+        if(temp==null)
+            return;
+        System.out.print(temp.data+" ");
+        inorder(temp.left);
+        inorder(temp.right);
+    }
+    public static void main(String[] args) throws Exception
+    {
+       // READING INPUT USING BUFFERED READER
+           InputStreamReader r=new InputStreamReader(System.in);    
+              BufferedReader br=new BufferedReader(r);      
+        String values = br.readLine();
+        String st[]=values.split(" ");
+        if(st[0].equals("N"))
+        {
+        System.out.println("0");
+        return;
+        }
+        TreeNode root=build(st);
+        recoverTree(root);
+            inorder(root);
+            br.close();
+}
+}
+
+==================================================RIGHT VIEW OF BINARY TREE===========================
+
+import java.util.*;
+
+class TreeNode {
+    int val;
+    TreeNode left, right;
+
+    TreeNode(int val) {
+        this.val = val;
+        left = right = null;
+    }
+}
+
+public class BinaryTree {
+    TreeNode root;
+
+    BinaryTree() {
+        root = null;
+    }
+
+    void rightView() {
+        if (root == null)
+            return;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            TreeNode current = null;
+
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (i == size - 1)
+                    current = node;
+
+                if (node.left != null)
+                    queue.add(node.left);
+
+                if (node.right != null)
+                    queue.add(node.right);
+            }
+            System.out.print(current.val + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        BinaryTree tree = new BinaryTree();
+        String[] nodes = scanner.nextLine().split(" ");
+        TreeNode[] nodeArray = new TreeNode[nodes.length];
+
+        for (int i = 0; i < nodes.length; i++) {
+            if (!nodes[i].equals("-1"))
+                nodeArray[i] = new TreeNode(Integer.parseInt(nodes[i]));
+        }
+
+        for (int i = 0; i < nodes.length; i++) {
+            if (nodeArray[i] != null) {
+                int leftIndex = 2 * i + 1;
+                int rightIndex = 2 * i + 2;
+                if (leftIndex < nodes.length && nodeArray[leftIndex] != null)
+                    nodeArray[i].left = nodeArray[leftIndex];
+                if (rightIndex < nodes.length && nodeArray[rightIndex] != null)
+                    nodeArray[i].right = nodeArray[rightIndex];
+            }
+        }
+
+        tree.root = nodeArray[0];
+        tree.rightView();
+    }
+}
+
+================================================LEFT VIEW OF BINARY TREE==========================================
+
+import java.util.*;
+
+class TreeNode {
+    int val;
+    TreeNode left, right;
+
+    TreeNode(int val) {
+        this.val = val;
+        left = right = null;
+    }
+}
+
+public class BinaryTree {
+    TreeNode root;
+
+    BinaryTree() {
+        root = null;
+    }
+
+    void leftView() {
+        if (root == null)
+            return;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            TreeNode current = null;
+
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (i == 0)
+                    current = node;
+
+                if (node.left != null)
+                    queue.add(node.left);
+
+                if (node.right != null)
+                    queue.add(node.right);
+            }
+            System.out.print(current.val + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        BinaryTree tree = new BinaryTree();
+        String[] nodes = scanner.nextLine().split(" ");
+        TreeNode[] nodeArray = new TreeNode[nodes.length];
+
+        for (int i = 0; i < nodes.length; i++) {
+            if (!nodes[i].equals("-1"))
+                nodeArray[i] = new TreeNode(Integer.parseInt(nodes[i]));
+        }
+
+        for (int i = 0; i < nodes.length; i++) {
+            if (nodeArray[i] != null) {
+                int leftIndex = 2 * i + 1;
+                int rightIndex = 2 * i + 2;
+                if (leftIndex < nodes.length && nodeArray[leftIndex] != null)
+                    nodeArray[i].left = nodeArray[leftIndex];
+                if (rightIndex < nodes.length && nodeArray[rightIndex] != null)
+                    nodeArray[i].right = nodeArray[rightIndex];
+            }
+        }
+
+        tree.root = nodeArray[0];
+        tree.leftView();
+    }
+}
+
+===========================================BOTTOM VIEW OF BINARY TREE======================================
+
+//BOTTOM VIEW
+
+import java.util.*;
+import java.util.Map.Entry;
+class Node {
+    int data,hd;
+    Node left, right;
+    public Node(int data){
+        this.data = data;
+        left = right = null;
+        this.hd = Integer. MAX_VALUE;
+    }
+}
+
+class Main {
+    static Node root;
+    private List<Integer> path1 = new ArrayList<>();
+    private List<Integer> path2 = new ArrayList<>();
+    static Node build(String s[]){
+        if(s[0]=="N"||s.length==0)
+            return null;
+        Node root=new Node(Integer.parseInt(s[0]));
+	  Queue<Node> q=new LinkedList<Node>();
+        q.add(root);
+	     int i=1;
+        while(!q.isEmpty() && i<s.length){
+            Node curr=q.poll();
+            String cval=s[i];
+            if(!cval.equals("N")){
+                int h=Integer.parseInt(cval);
+                curr.left=new Node(h);
+                q.add(curr.left);
+            }
+            i++;
+            if(i >= s.length)
+                break;
+            cval = s[i];
+               if(!cval.equals("N")){
+                   int h=Integer.parseInt(cval);
+                   curr.right=new Node(h);
+                   q.add(curr.right);
+               }
+               i++;
+           }
+           return root;
+	}
+ static void bottomview(Node root){
+        if (root == null)
+            return;
+        int hd = 0;
+        Map<Integer, Integer> map = new TreeMap<>();
+        Queue<Node> queue = new LinkedList<Node>();
+        root.hd = hd;
+        queue.add(root);
+                while (!queue.isEmpty()){
+            Node temp = queue.remove();
+            hd = temp.hd;
+            map.put(hd, temp.data);
+            if (temp.left != null){
+                temp.left.hd = hd-1;
+                queue.add(temp.left);
+            }
+            if (temp.right != null)
+            {
+                temp.right.hd = hd+1;
+                queue.add(temp.right);
+            }
+        }
+        Set<Entry<Integer, Integer>> set = map.entrySet();
+        Iterator<Entry<Integer, Integer>> iterator = set.iterator();
+        while (iterator.hasNext()){
+            Map.Entry<Integer, Integer> me = iterator.next();
+            System.out.print(me.getValue()+" ");
+        }
+    }
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int i;
+        Main ob = new Main();
+        String s[]=sc.nextLine().split(" ");
+        root = build(s);
+        ob.bottomview(root);
+ 
+    }
+}
+=======================================ALL THE BEST===============================================
+
+</body>
+</html>
